@@ -36,7 +36,8 @@ func init() {
 	// Enable zstd support
 	internal.NewZstdWriter = func(rw io.Writer) (_ io.Writer, closeWriter func(), _ error) {
 		// TODO(mrueg): Replace klauspost/compress with stdlib implementation once https://github.com/golang/go/issues/62513 is implemented, and move this package to be a no-op / backfill for older go versions.
-		z, err := zstd.NewWriter(rw, zstd.WithEncoderLevel(zstd.SpeedFastest))
+		z, err := zstd.NewWriter(rw, zstd.WithEncoderLevel(zstd.SpeedBestCompression),
+			zstd.WithEncoderConcurrency(1))
 		if err != nil {
 			return nil, func() {}, err
 		}
